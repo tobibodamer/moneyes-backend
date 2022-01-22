@@ -28,6 +28,7 @@ var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 builder.Services.AddSingleton(jwtSettings);
 
 builder.Services.AddScoped<CustomCookieAuthenticationEvents>();
+builder.Services.AddScoped<CustomJwtBearerEvents>();
 
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAccessTokenService, JwtAccessTokenService>();
@@ -93,24 +94,7 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.AccessTokenSecret))
         };
 
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = context =>
-            {
-                context.HttpContext.Items["Properties"] = context.Properties;
-                context.HttpContext.Features.Set(context.Properties);
-
-                return Task.CompletedTask;
-            },
-            OnAuthenticationFailed = context =>
-            {
-                if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                {
-                    context.Response.Headers.Add("Token-Expired", "true");
-                }
-                return Task.CompletedTask;
-            }
-        };
+        options.EventsType = typeof(CustomJwtBearerEvents);
     })
     .AddGoogle(options =>
     {

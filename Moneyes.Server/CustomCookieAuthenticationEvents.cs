@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Moneyes.Server.Services;
+using System.Security.Claims;
 
 public class CustomCookieAuthenticationEvents : CookieAuthenticationEvents
 {
