@@ -114,10 +114,6 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
 
-                //var (token, tokenHandler) = _jwtManager.GenerateJwtToken2(HttpContext.User.Claims);
-
-                //Response.AddJwtTokenCookie(token, tokenHandler);
-
                 return LocalRedirect(returnUrl);
             }
             else if (result.IsLockedOut)

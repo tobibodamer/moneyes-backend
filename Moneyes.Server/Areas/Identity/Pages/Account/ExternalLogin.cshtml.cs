@@ -31,15 +31,13 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
-        private readonly ITokenAuthenticateService _tokenAuthenticateService;
 
         public ExternalLoginModel(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender,
-            ITokenAuthenticateService tokenAuthenticateService)
+            IEmailSender emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -47,7 +45,6 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
-            _tokenAuthenticateService = tokenAuthenticateService;
         }
 
         /// <summary>
