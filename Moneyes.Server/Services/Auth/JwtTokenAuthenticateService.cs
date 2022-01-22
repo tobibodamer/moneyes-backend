@@ -85,7 +85,7 @@ public class JwtTokenAuthenticateService : ITokenAuthenticateService
             claims = claims.Concat(new Claim[] { new("appid", appId) });
         }
 
-        var (refreshToken, refreshTokenId) = _refreshTokenService.GenerateWithId(claims);
+        var refreshToken = _refreshTokenService.GenerateWithInfo(claims);
 
         string? userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -97,12 +97,14 @@ public class JwtTokenAuthenticateService : ITokenAuthenticateService
         // Add refresh token to database when not existing
 
         RefreshToken? existingRefreshToken = await _context.RefreshTokens.FindAsync(
-            new[] { refreshTokenId, userId }, 
+            new[] { refreshToken.Id, userId }, 
             cancellationToken);
 
         if (existingRefreshToken == null)
         {
-            await _context.RefreshTokens.AddAsync(new RefreshToken(userId, refreshTokenId), cancellationToken);
+            await _context.RefreshTokens.AddAsync(
+                new RefreshToken(userId, refreshToken.Id, refreshToken.ExpiresAt),
+                cancellationToken);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -110,7 +112,7 @@ public class JwtTokenAuthenticateService : ITokenAuthenticateService
         return new()
         {
             AccessToken = _accessTokenService.Generate(claims),
-            RefreshToken = refreshToken
+            RefreshToken = refreshToken.Token
         };
     }
 }

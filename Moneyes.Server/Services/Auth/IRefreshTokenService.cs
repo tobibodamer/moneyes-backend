@@ -8,7 +8,7 @@ namespace Moneyes.Server.Services
         /// <summary>
         /// Generates token based on user information.
         /// </summary>
-        /// <returns>Generated token and its id.</returns>
-        (string Token, string Id) GenerateWithId(IEnumerable<Claim> claims);
+        /// <returns>Generated token and its id and expiration date.</returns>
+        (string Token, string Id, DateTime ExpiresAt) GenerateWithInfo(IEnumerable<Claim> claims);
     }
 }

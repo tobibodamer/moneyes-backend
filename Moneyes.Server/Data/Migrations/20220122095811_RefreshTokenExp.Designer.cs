@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moneyes.Server.Data;
 
@@ -11,9 +12,10 @@ using Moneyes.Server.Data;
 namespace Moneyes.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220122095811_RefreshTokenExp")]
+    partial class RefreshTokenExp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,8 +230,8 @@ namespace Moneyes.Server.Data.Migrations
                     b.Property<string>("User")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTimeOffset>("Expires")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Token", "User");
 

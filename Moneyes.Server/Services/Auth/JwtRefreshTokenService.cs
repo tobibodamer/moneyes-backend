@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace Moneyes.Server.Services;
 
@@ -15,11 +16,15 @@ public class JwtRefreshTokenService : IRefreshTokenService
             _jwtSettings.RefreshTokenSecret,
             _jwtSettings.Issuer, _jwtSettings.Audience,
             _jwtSettings.RefreshTokenExpirationMinutes)
-        .Token;
+        .Serialized;
 
-    public (string Token, string Id) GenerateWithId(IEnumerable<Claim>? claims = null) =>
-        _tokenGenerator.Generate(
+    public (string Token, string Id, DateTime ExpiresAt) GenerateWithInfo(IEnumerable<Claim>? claims = null)
+    {
+        (string Serialized, SecurityToken Token) = _tokenGenerator.Generate(
             _jwtSettings.RefreshTokenSecret,
             _jwtSettings.Issuer, _jwtSettings.Audience,
             _jwtSettings.RefreshTokenExpirationMinutes);
+
+        return (Serialized, Token.Id, Token.ValidTo);
+    }
 }

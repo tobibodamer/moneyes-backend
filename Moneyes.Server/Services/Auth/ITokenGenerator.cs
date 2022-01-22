@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace Moneyes.Server.Services
 {
@@ -16,6 +17,6 @@ namespace Moneyes.Server.Services
         /// <param name="expires">The expire time.</param>
         /// <param name="claims"><see cref="IEnumerable{T}"/></param>
         /// <returns>Generated token.</returns>
-        (string Token, string Id) Generate(string secretKey, string issuer, string audience, double expires,
+        (string Serialized, SecurityToken Token) Generate(string secretKey, string issuer, string audience, double expires,
             IEnumerable<Claim>? claims = null);
     }}

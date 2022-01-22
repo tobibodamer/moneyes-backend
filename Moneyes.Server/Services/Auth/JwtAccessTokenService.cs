@@ -20,12 +20,5 @@ public class JwtAccessTokenService : IAccessTokenService
             _jwtSettings.Issuer, _jwtSettings.Audience,
             _jwtSettings.AccessTokenExpirationMinutes,
             claims)
-        .Token;
-
-    public (string Token, string Id) GenerateWithId(IEnumerable<Claim>? claims = null) =>
-        _tokenGenerator.Generate(
-            _jwtSettings.AccessTokenSecret,
-            _jwtSettings.Issuer, _jwtSettings.Audience,
-            _jwtSettings.AccessTokenExpirationMinutes,
-            claims);
+        .Serialized;
 }

@@ -8,7 +8,7 @@ namespace Moneyes.Server.Services;
 /// <inheritdoc cref="ITokenGenerator"/>
 public class JwtTokenGenerator : ITokenGenerator
 {
-    public (string Token, string Id) Generate(
+    public (string Serialized, SecurityToken Token) Generate(
         string secretKey, string issuer, string audience, double expires, IEnumerable<Claim>? claims = null)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -26,6 +26,6 @@ public class JwtTokenGenerator : ITokenGenerator
             DateTime.UtcNow,
             DateTime.UtcNow.AddMinutes(expires),
             credentials);
-        return (new JwtSecurityTokenHandler().WriteToken(securityToken), securityToken.Id);
+        return (new JwtSecurityTokenHandler().WriteToken(securityToken), securityToken);
     }
 }

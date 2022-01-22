@@ -7,11 +7,13 @@ namespace Moneyes.Server.Data
     {
         public string User { get; set; }
         public string Token { get; set; }
+        public DateTimeOffset Expires { get; set; }
 
-        public RefreshToken(string user, string token)
+        public RefreshToken(string user, string token, DateTimeOffset expires)
         {
             User = user;
             Token = token;
+            Expires = expires;
         }
     }
 }
