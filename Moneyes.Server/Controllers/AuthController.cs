@@ -14,13 +14,17 @@ using System.Text;
 namespace Moneyes.Server.Controllers
 {
     [Route("api/{controller}")]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly ITokenAuthenticateService _tokenAuthenticateService;
+        private readonly IActiveRefreshTokenService _activeRefreshTokenService;
 
-        public AuthController(ITokenAuthenticateService tokenAuthenticateService)
+        public AuthController(ITokenAuthenticateService tokenAuthenticateService, 
+            IActiveRefreshTokenService activeRefreshTokenService)
         {
             _tokenAuthenticateService = tokenAuthenticateService;
+            _activeRefreshTokenService = activeRefreshTokenService;
         }
 
         /// <summary>
@@ -28,7 +32,6 @@ namespace Moneyes.Server.Controllers
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns>A <see cref="TokenAuthenticateResult"/> consisting of an access and refresh token.</returns>
-        [Authorize]
         [HttpGet("token")]
         public async Task<TokenAuthenticateResult> GetToken(string? appId = null, CancellationToken cancellationToken = default)
         {
@@ -43,7 +46,7 @@ namespace Moneyes.Server.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns>A new access and refresh token.</returns>
         [AllowAnonymous]
-        [HttpPost("refreshToken")]
+        [HttpPost("token/refresh")]
         public async Task<ActionResult<TokenAuthenticateResult>> RefreshToken(
             string refreshToken, 
             string? accessToken = null, 
@@ -65,6 +68,21 @@ namespace Moneyes.Server.Controllers
             catch (SecurityTokenException)
             {
                 return Unauthorized();
+            }
+        }
+
+        [HttpPost("token/revokeAll")]
+        public async Task<ActionResult<int>> RevokeAll(
+            string ? appId = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await _activeRefreshTokenService.RevokeAllTokens(User, appId, cancellationToken);
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
     }

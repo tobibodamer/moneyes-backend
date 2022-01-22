@@ -103,7 +103,7 @@ public class JwtTokenAuthenticateService : ITokenAuthenticateService
         if (existingRefreshToken == null)
         {
             await _context.RefreshTokens.AddAsync(
-                new RefreshToken(userId, refreshToken.Id, refreshToken.ExpiresAt),
+                new RefreshToken(userId, refreshToken.Id, refreshToken.ExpiresAt, appId),
                 cancellationToken);
         }
 

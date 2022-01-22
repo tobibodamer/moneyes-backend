@@ -36,6 +36,7 @@ builder.Services.AddScoped<IRefreshTokenService, JwtRefreshTokenService>();
 builder.Services.AddScoped<IRefreshTokenValidator, JwtRefreshTokenValidator>();
 builder.Services.AddScoped<IAccessTokenValidator, JwtAccessTokenValidator>();
 builder.Services.AddScoped<ITokenAuthenticateService, JwtTokenAuthenticateService>();
+builder.Services.AddScoped<IActiveRefreshTokenService, ActiveRefreshTokenService>();
 
 #endregion
 
