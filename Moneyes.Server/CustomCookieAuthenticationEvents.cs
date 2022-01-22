@@ -18,13 +18,18 @@ public class CustomCookieAuthenticationEvents : CookieAuthenticationEvents
             if (context.HttpContext.Items.TryGetValue("generate-jwt", out var generateJwt)
                 && (generateJwt?.Equals(true) ?? false))
                 {
-                var tokenResult = await _tokenAuthenticateService.Authenticate(context.Principal, default);
+
+                context.HttpContext.Items.TryGetValue("appId", out var appId);
+
+                var tokenResult = await _tokenAuthenticateService.Authenticate(
+                    context.Principal, appId?.ToString(), default);
 
                 //context.Response.AddAuthTokenCookie(tokenResult);
 
                 await context.Response.WriteAsJsonAsync(tokenResult);
             }
         }
+
         await base.SignedIn(context);
     }
 }

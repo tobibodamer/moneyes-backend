@@ -95,18 +95,13 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string provider, string appid = null, string returnUrl = null)
         {
-            bool generateJwt = false;
-            if (!string.IsNullOrEmpty(appid))
-            {
-                generateJwt = true;
-            }
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl, generateJwt });
+            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl, appid });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
 
-        public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, bool generateJwt = false, string remoteError = null)
+        public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string appId = null, string remoteError = null)
         {
             returnUrl ??= Url.Content("~/");
             if (remoteError != null)
@@ -121,9 +116,10 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            if (generateJwt)
+            if (appId != null)
             {
                 HttpContext.Items.Add("generate-jwt", true);
+                HttpContext.Items.Add("appId", appId);
             }
 
             // Sign in the user with this external login provider if the user already has a login.
@@ -131,17 +127,6 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-
-
-                
-
-                // Create auth token and add to cookies
-                //var tokenResult = await _tokenAuthenticateService.Authenticate(info.Principal, CancellationToken.None);
-                //Response.AddAuthTokenCookie(tokenResult);
-
-                //var (token, tokenHandler) = _jwtManager.GenerateJwtToken2(HttpContext.User.Claims);
-
-                //Response.AddJwtTokenCookie(token, tokenHandler);
 
                 return LocalRedirect(returnUrl);
             }
@@ -210,10 +195,6 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-
-                        // Create auth token and add to cookies
-                        //var tokenResult = await _tokenAuthenticateService.Authenticate(HttpContext.User, CancellationToken.None);
-                        //Response.AddAuthTokenCookie(tokenResult);
 
                         return LocalRedirect(returnUrl);
                     }

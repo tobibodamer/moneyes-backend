@@ -113,6 +113,7 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
             if (!string.IsNullOrEmpty(appid))
             {
                 HttpContext.Items.Add("generate-jwt", true);
+                HttpContext.Items.Add("appId", appid);
             }
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();

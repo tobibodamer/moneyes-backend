@@ -14,5 +14,6 @@ public interface ITokenAuthenticateService
     /// </summary>
     /// <param name="user">The user.</param>
     /// <param name="cancellationToken">Instance of <see cref="CancellationToken"/>.</param>
-    Task<TokenAuthenticateResult> Authenticate(ClaimsPrincipal user, CancellationToken cancellationToken);
+    Task<TokenAuthenticateResult> Authenticate(ClaimsPrincipal user, string? appId = null,
+        CancellationToken cancellationToken = default);
 }

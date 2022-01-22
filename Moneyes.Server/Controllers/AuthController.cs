@@ -39,9 +39,9 @@ namespace Moneyes.Server.Controllers
         /// <returns>A <see cref="TokenAuthenticateResult"/> consisting of an access and refresh token.</returns>
         [Authorize]
         [HttpGet("token")]
-        public async Task<TokenAuthenticateResult> GetToken(CancellationToken cancellationToken = default)
+        public async Task<TokenAuthenticateResult> GetToken(string? appId = null, CancellationToken cancellationToken = default)
         {
-            return await _tokenAuthenticateService.Authenticate(HttpContext.User, cancellationToken);
+            return await _tokenAuthenticateService.Authenticate(User, appId, cancellationToken);
         }
 
         /// <summary>
@@ -100,8 +100,10 @@ namespace Moneyes.Server.Controllers
 
             await _context.SaveChangesAsync();
 
+            string appId = user.FindFirstValue("appid");
+
             // Return new access and refresh token
-            return await _tokenAuthenticateService.Authenticate(user, cancellationToken);
+            return await _tokenAuthenticateService.Authenticate(user, appId, cancellationToken);
         }
     }
 }

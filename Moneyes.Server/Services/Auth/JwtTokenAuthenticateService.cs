@@ -19,9 +19,16 @@ public class JwtTokenAuthenticateService : ITokenAuthenticateService
         _context = context;
     }
 
-    public async Task<TokenAuthenticateResult> Authenticate(ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<TokenAuthenticateResult> Authenticate(ClaimsPrincipal user, string? appId = null, CancellationToken cancellationToken = default)
     {
-        var refreshToken = _refreshTokenService.Generate(user.Claims);
+        IEnumerable<Claim> claims = user.Claims;
+
+        if (appId != null)
+        {
+            claims = claims.Concat(new Claim[] { new("appid", appId) });
+        }
+
+        var refreshToken = _refreshTokenService.Generate(claims);
 
         var userId = user.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)!.Value;
 
@@ -36,7 +43,7 @@ public class JwtTokenAuthenticateService : ITokenAuthenticateService
 
         return new()
         {
-            AccessToken = _accessTokenService.Generate(user.Claims),
+            AccessToken = _accessTokenService.Generate(claims),
             RefreshToken = refreshToken
         };
     }
