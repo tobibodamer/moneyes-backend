@@ -17,19 +17,10 @@ namespace Moneyes.Server.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ITokenAuthenticateService _tokenAuthenticateService;
-        private readonly IRefreshTokenValidator _refreshTokenValidator;
-        private readonly IAccessTokenValidator _accessTokenValidator;
-        private readonly ApplicationDbContext _context;
 
-        public AuthController(ITokenAuthenticateService tokenAuthenticateService,
-            IRefreshTokenValidator refreshTokenValidator,
-            IAccessTokenValidator accessTokenValidator,
-            ApplicationDbContext context)
+        public AuthController(ITokenAuthenticateService tokenAuthenticateService)
         {
             _tokenAuthenticateService = tokenAuthenticateService;
-            _refreshTokenValidator = refreshTokenValidator;
-            _accessTokenValidator = accessTokenValidator;
-            _context = context;
         }
 
         /// <summary>
@@ -63,47 +54,18 @@ namespace Moneyes.Server.Controllers
 
             if (accessToken is null)
             {
-                return BadRequest("Invalid access token");
+                return BadRequest("No access token available.");
             }
 
-            // Validate refresh token
-
-            var isValidRefreshToken = _refreshTokenValidator.Validate(refreshToken);
-
-            if (!isValidRefreshToken)
+            try
             {
-                return BadRequest("Invalid refresh token");
+                // Return new access and refresh token
+                return await _tokenAuthenticateService.Reauthenticate(accessToken!, refreshToken, cancellationToken);
             }
-
-            // Validate access token and retrieve principal
-            var user = _accessTokenValidator.Validate(accessToken);
-
-            if (user is null)
+            catch (SecurityTokenException)
             {
-                return BadRequest("Invalid access token");
+                return Unauthorized();
             }
-
-            string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Get refresh token object from database
-
-            var refreshTokenObject = await _context.RefreshTokens
-                .FirstOrDefaultAsync(x => x.Token == refreshToken && x.User == userId, cancellationToken);
-
-            if (refreshTokenObject is null)
-            {
-                return BadRequest("Invalid refresh token");
-            }
-
-            // Remove old refresh token from database
-            _context.RefreshTokens.Remove(refreshTokenObject!);
-
-            await _context.SaveChangesAsync();
-
-            string appId = user.FindFirstValue("appid");
-
-            // Return new access and refresh token
-            return await _tokenAuthenticateService.Authenticate(user, appId, cancellationToken);
         }
     }
 }

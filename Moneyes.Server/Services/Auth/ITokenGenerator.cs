@@ -16,6 +16,6 @@ namespace Moneyes.Server.Services
         /// <param name="expires">The expire time.</param>
         /// <param name="claims"><see cref="IEnumerable{T}"/></param>
         /// <returns>Generated token.</returns>
-        string Generate(string secretKey, string issuer, string audience, double expires,
+        (string Token, string Id) Generate(string secretKey, string issuer, string audience, double expires,
             IEnumerable<Claim>? claims = null);
     }}

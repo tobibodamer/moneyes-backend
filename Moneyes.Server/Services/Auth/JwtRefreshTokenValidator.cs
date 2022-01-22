@@ -9,8 +9,10 @@ public class JwtRefreshTokenValidator : IRefreshTokenValidator
 
     public JwtRefreshTokenValidator(JwtSettings jwtSettings) => _jwtSettings = jwtSettings;
 
-    public bool Validate(string refreshToken)
+    public bool Validate(string refreshToken, out SecurityToken? validatedToken)
     {
+        validatedToken = null;
+
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -27,7 +29,7 @@ public class JwtRefreshTokenValidator : IRefreshTokenValidator
         try
         {
             jwtSecurityTokenHandler.ValidateToken(refreshToken, validationParameters,
-                out SecurityToken validatedToken);
+                out validatedToken);
             return true;
         }
         catch (Exception)

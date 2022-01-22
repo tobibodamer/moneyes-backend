@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.IdentityModel.Tokens;
 
 namespace Moneyes.Server.Services;
 
@@ -12,10 +12,5 @@ public interface IRefreshTokenValidator
     /// </summary>
     /// <param name="refreshToken">The refresh token.</param>
     /// <returns>True if token is valid,otherwise false.</returns>
-    bool Validate(string refreshToken);
-}
-
-public interface IAccessTokenValidator
-{
-    ClaimsPrincipal? Validate(string accessToken);
+    bool Validate(string refreshToken, out SecurityToken? validatedToken);
 }

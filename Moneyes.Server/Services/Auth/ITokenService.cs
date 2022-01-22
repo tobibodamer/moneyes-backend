@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace Moneyes.Server.Services;
@@ -11,7 +12,6 @@ public interface ITokenService
     /// <summary>
     /// Generates token based on user information.
     /// </summary>
-    /// <param name="user"><see cref="User"/> instance.</param>
     /// <returns>Generated token.</returns>
     string Generate(IEnumerable<Claim> claims);
 }
