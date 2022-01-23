@@ -35,3 +35,5 @@ services:
         ACCEPT_EULA: "Y"
     ports:
       - "5434:1433"
+    volumes:
+      - /var/opt/moneyes-docker/mssql/data:/var/opt/mssql/data
