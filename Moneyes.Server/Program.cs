@@ -153,11 +153,10 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.Run();
-
-
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
-    var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext> ();
+    var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
     context.Database.Migrate();
 }
+
+app.Run();
