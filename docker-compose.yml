@@ -15,6 +15,7 @@ services:
   api:
     depends_on:
       - nginx
+      - db
     build:
       context: ./Moneyes.Server
       dockerfile: Dockerfile
@@ -25,3 +26,11 @@ services:
     tty: true        # docker run -t
     env_file:
       - ./Moneyes.Server/.env
+  db:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    env_file:
+      - ./Moneyes.Server/.env
+    environment:
+        ACCEPT_EULA: "Y"
+    ports:
+      - "5434:1433"
