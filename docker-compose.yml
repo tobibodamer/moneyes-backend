@@ -12,7 +12,8 @@ services:
     restart: always
     volumes:
       - /etc/letsencrypt/:/etc/letsencrypt/
-  api:
+      - /etc/nginx/ssl/:/etc/nginx/ssl/
+  authserver:
     depends_on:
       - nginx
       - db
@@ -25,11 +26,11 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     env_file:
-      - ./Moneyes.Server/.env
+      - ./.env
   db:
     image: "mcr.microsoft.com/mssql/server:2017-latest"
     env_file:
-      - ./Moneyes.Server/.env
+      - ./.env
     environment:
         ACCEPT_EULA: "Y"
     ports:
