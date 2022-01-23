@@ -19,11 +19,13 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _sender;
+        private readonly IWebHostEnvironment _hostEnv;
 
-        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender sender, IWebHostEnvironment hostEnv)
         {
             _userManager = userManager;
             _sender = sender;
+            _hostEnv = hostEnv;
         }
 
         /// <summary>
@@ -58,9 +60,9 @@ namespace Moneyes.Server.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with email '{email}'.");
             }
 
-            Email = email;
+            Email = email; this.
             // Once you add a real email sender, you should remove this code that lets you confirm the account
-            DisplayConfirmAccountLink = true;
+            DisplayConfirmAccountLink = _hostEnv.IsDevelopment();
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
