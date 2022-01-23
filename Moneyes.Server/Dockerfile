@@ -6,7 +6,7 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /moneyes-backend
 COPY ["Moneyes.Server/Moneyes.Server.csproj", "Moneyes.Server/"]
 RUN dotnet restore "Moneyes.Server/Moneyes.Server.csproj"
 COPY . .
