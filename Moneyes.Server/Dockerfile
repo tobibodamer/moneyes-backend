@@ -10,7 +10,7 @@ WORKDIR /moneyes-backend
 COPY ["Moneyes.Server/Moneyes.Server.csproj", "Moneyes.Server/"]
 RUN dotnet restore "Moneyes.Server/Moneyes.Server.csproj"
 COPY . .
-WORKDIR "/src/Moneyes.Server"
+WORKDIR "/moneyes-backend/Moneyes.Server"
 RUN dotnet build "Moneyes.Server.csproj" -c Release -o /app/build
 
 FROM build AS publish
