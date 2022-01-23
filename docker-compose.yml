@@ -2,19 +2,19 @@ version: "3.9"
 
 services:
 
-  reverseproxy:
+  nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    env_file:
-      - "./Moneyes.Server/.env"
     ports:
-      - "80:80"
+      - 80:80
+      - 443:443
     restart: always
-
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
   api:
     depends_on:
-      - reverseproxy
+      - nginx
     build:
       context: ./Moneyes.Server
       dockerfile: Dockerfile
@@ -23,3 +23,5 @@ services:
     restart: always
     stdin_open: true # docker run -i
     tty: true        # docker run -t
+    env_file:
+      - ./Moneyes.Server/.env
