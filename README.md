@@ -9,12 +9,11 @@ Account service available under [accounts.moneyes.de](https://accounts.moneyes.d
 
 Environment variables needed for local execution:
 
-Authentication__Google__ClientSecret
-
-Authentication__Google__ClientId
+Authentication__Google__ClientSecret <br />
+Authentication__Google__ClientId <br />
 
 These can also be stored as secrets using the [Secrets Manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?) as follows:
 
-Authentication:Google:ClientSecret <br />
-Authentication:Google:ClientId <br />
+"Authentication:Google:ClientSecret" <br />
+"Authentication:Google:ClientId" <br />
 
