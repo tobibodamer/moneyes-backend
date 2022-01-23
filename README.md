@@ -5,6 +5,8 @@ Will be hosted on [moneyes.de](https://moneyes.de).
 
 Account service available under [accounts.moneyes.de](https://accounts.moneyes.de).
 
+## Requirements
+
 Environment variables needed for local execution:
 
 Authentication__Google__ClientSecret
