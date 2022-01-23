@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Moneyes.Server;
@@ -39,6 +40,13 @@ builder.Services.AddScoped<ITokenAuthenticateService, JwtTokenAuthenticateServic
 builder.Services.AddScoped<IActiveRefreshTokenService, ActiveRefreshTokenService>();
 
 #endregion
+
+// Email
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("Mail"));
+    builder.Services.AddTransient<IEmailSender, EmailSender>();
+}
 
 builder.Services.AddAuthentication(options =>
 {
