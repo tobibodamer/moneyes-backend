@@ -154,3 +154,10 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext> ();
+    context.Database.Migrate();
+}
